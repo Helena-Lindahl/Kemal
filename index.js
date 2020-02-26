@@ -11,4 +11,4 @@ mongoose.connect(dbUrl, dbOptions).then(() => {
     app.listen(port, () => console.log(`App listening on port ${port}!`))
 })
 
-module.exports = { app, port }
+module.exports = { app, port }  
