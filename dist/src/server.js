@@ -1,15 +1,15 @@
-'use strict';
+
 
 // Här ska vi definiera vår server! Men vi ska inte starta den
 // (alltså app.listen(port, ()=>{}), har vi inte i denna fil, utan i index.js)
 var express = require('express');
-var sassMiddleware = require('node-sass-middleware');
+
 var app = express();
-var port = 8080;
+var port = process.env.PORT || 8080;
 var productItem = require('../model/product');
 
 var ROUTE = {
-    root: '/',
+    main: '/',
     product: '/product',
     gallery: '/gallery',
     addProduct: '/add-product'
@@ -22,12 +22,15 @@ var VIEW = {
     addProduct: 'add-product'
 };
 
-app.use(sassMiddleware({ // tell sassMiddleware where src file and dest directory is
-    src: 'sass',
-    dest: 'public',
-    // debug: true, // för att skriva ut data till konsollen
-    outputStyle: 'compressed'
-}));
+if (process.env.NODE == "development") {
+    const sassMiddleware = require('node-sass-middleware');
+    app.use(sassMiddleware({ // tell sassMiddleware where src file and dest directory is
+        src: 'sass',
+        dest: 'public',
+        // debug: true, // för att skriva ut data till konsollen
+        outputStyle: 'compressed'
+    }))
+};
 // define a static folder, 'public'
 app.use(express.static('public'));
 // 
@@ -57,7 +60,7 @@ app.post(ROUTE.addProduct, function (req, res) {
     res.status(200).redirect(ROUTE.gallery);
 });
 
-app.get(ROUTE.root, function (req, res) {
+app.get(ROUTE.main, function (req, res) {
     res.status(200).render(VIEW.main, {});
 });
 
